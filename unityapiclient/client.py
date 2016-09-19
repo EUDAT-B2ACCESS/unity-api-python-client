@@ -32,9 +32,29 @@ class UnityApiClient:
             kwargs.setdefault('rest_admin_path', DEFAULT_REST_ADMIN_PATH),
             kwargs.setdefault('api_version', DEFAULT_API_VERSION))
 
-    def get_groups(self):
+    def get_group(self, group_path=None):
+        """Returns all members and subgroups of the specified group.
+
+        If ``group_path`` is not supplied, then the method returns all
+        root-level groups and members. 
+
+        @param group_path: (optional) path to group whose subgroups
+            and members to retrieve. 
+
+        Example output::
+
+             {
+               "subGroups" : [ ],
+               "members" : [ 3 ]
+             }
+
+        """
+        if group_path is not None:
+            path = '/group/' + group_path
+        else:
+            path = '/group/%2F'
         try:
-            response = self.__session.get(self.__api_base_url + '/group/%2F')
+            response = self.__session.get(self.__api_base_url + path)
             response.raise_for_status()
             response = response.json()
         except (requests.HTTPError, requests.ConnectionError), error:
