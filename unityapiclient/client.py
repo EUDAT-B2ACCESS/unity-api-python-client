@@ -41,7 +41,7 @@ class UnityApiClient:
         @param group_path: (optional) path to group whose subgroups
             and members to retrieve. 
 
-        Example output::
+        Example response::
 
              {
                "subGroups" : [ ],
@@ -53,6 +53,57 @@ class UnityApiClient:
             path = '/group/' + group_path
         else:
             path = '/group/%2F'
+        try:
+            response = self.__session.get(self.__api_base_url + path)
+            response.raise_for_status()
+            response = response.json()
+        except (requests.HTTPError, requests.ConnectionError), error:
+            raise Exception(error.message)
+
+        return response
+
+    def get_entity(self, entity_id):
+        """Returns information about the identified entity, including
+        its status and all identities.
+
+        @param entity_id: numeric identifier of the entity whose status
+            and identities to retrieve.
+
+        Example response::
+
+             {
+               "id" : 3,
+               "state" : "valid",
+               "identities" : [ {
+                 "typeId" : "userName",
+                 "value" : "tested",
+                 "target" : null,
+                 "realm" : null,
+                 "local" : true,
+                 "entityId" : 3,
+                 "comparableValue" : "tested"
+               }, {
+                 "typeId" : "persistent",
+                 "value" : "129ffe63-63b9-4467-ae24-6bc889327b0d",
+                 "target" : null,
+                 "realm" : null,
+                 "local" : true,
+                 "entityId" : 3,
+                 "comparableValue" : "129ffe63-63b9-4467-ae24-6bc889327b0d"
+               } ],
+               "credentialInfo" : {
+                 "credentialRequirementId" : "cr-pass",
+                 "credentialsState" : {
+                   "credential1" : {
+                     "state" : "notSet",
+                     "extraInformation" : ""
+                   }
+                 }
+               }
+             }
+
+        """
+        path = '/entity/' + str(entity_id)
         try:
             response = self.__session.get(self.__api_base_url + path)
             response.raise_for_status()
