@@ -21,14 +21,18 @@ class PyTest(TestCommand):
         sys.exit(pytest.main(self.test_args))
 
 
-# Set common test dependencies
+# Set run-time dependencies
+dependencies = [
+    'requests',
+]
+
+# Set test dependencies
 test_dependencies = [
+    'pytest-cov',
     'pytest',
 ]
 
 if sys.version_info < (2, 7):
-#    test_dependencies.append('argparse')
-#    test_dependencies.append('unittest2')
     # Workaround for atexit._run_exitfuncs error when invoking `test` with
     # older versions of Python
     try:
@@ -77,7 +81,7 @@ setup(name='unityapiclient',
           'Intended Audience :: Developers',
           'Topic :: Software Development :: Libraries :: Python Modules',
       ],
-      keywords=['unity identity management rest api client library'],
+      keywords='unity identity management rest api client library',
       author='Nicolas Liampotis',
       author_email='nliam@grnet.gr',
       url='http://eudat-b2access.github.io/unity-api-python-client',
@@ -85,9 +89,8 @@ setup(name='unityapiclient',
       license='Apache License 2.0',
       packages=['unityapiclient'],
       zip_safe=False,
-      install_requires=[
-          'requests',
-      ],
+      install_requires=dependencies,
       tests_require=test_dependencies,
+      python_requires='>=2.6,<=2.7',
       cmdclass={'test': PyTest},
 )
