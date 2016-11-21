@@ -184,6 +184,22 @@ class UnityApiClient:
 
         return response
 
+    def remove_entity_attribute(self, entity_id, attribute_name):
+        """Removes the given attribute of the identified entity.
+
+        @param entity_id: numeric identifier of the entity whose attribute
+            to remove
+        @param attribute_name: name of the attribute to remove
+
+        """
+        path = '/entity/' + str(entity_id) + '/attribute/' + str(
+            attribute_name)
+        try:
+            response = self.__session.delete(self.__api_base_url + path)
+            response.raise_for_status()
+        except (requests.HTTPError, requests.ConnectionError), error:
+            raise Exception(error.message)
+
     def _build_api_base_url(self,
         server_base_url, 
         rest_admin_path, 
