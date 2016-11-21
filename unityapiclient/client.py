@@ -113,6 +113,27 @@ class UnityApiClient:
 
         return response
 
+    def get_entity_groups(self, entity_id):
+        """Returns all groups of the identified entity.
+
+        @param entity_id: numeric identifier of the entity whose groups to 
+            retrieve.
+
+        Example response::
+
+             ["/example/sub","/example","/"]
+
+        """
+        path = '/entity/' + str(entity_id) + '/groups'
+        try:
+            response = self.__session.get(self.__api_base_url + path)
+            response.raise_for_status()
+            response = response.json()
+        except (requests.HTTPError, requests.ConnectionError), error:
+            raise Exception(error.message)
+
+        return response
+
     def _build_api_base_url(self,
         server_base_url, 
         rest_admin_path, 
