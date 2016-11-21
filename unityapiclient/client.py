@@ -134,6 +134,56 @@ class UnityApiClient:
 
         return response
 
+    def get_entity_attributes(self, entity_id, group_path=None, 
+                              effective=True):
+        """Returns all attributes of the identified entity.
+
+        If ``group_path`` is not supplied, then the method returns the 
+        attributes in all groups the entity is member of. 
+
+        @param entity_id: numeric identifier of the entity whose attributes to 
+            retrieve.
+        @param group_path: (optional) path to the group associated with the 
+            attributes to retrieve.
+        @param effective: (optional) whether to retrieve only directly defined
+            or effective attributes (by default True).
+
+        Example response::
+
+            [ 
+              {
+                "values" : [ "/9j/4AAQSk .... KKKKACiiigD//2Q==" ],
+                "direct" : true,
+                "name" : "jpegA",
+                "groupPath" : "/example",
+                "visibility" : "full",
+                "syntax" : "jpegImage"
+              }, 
+              {
+                "values" : [ "value" ],
+                "direct" : true,
+                "name" : "stringA",
+                "groupPath" : "/example",
+                "visibility" : "full",
+                "syntax" : "string"
+              } 
+            ]
+
+        """
+        path = '/entity/' + str(entity_id) + '/attributes'
+        params = {'effective': effective}
+        if group_path is not None:
+            params['group'] = group_path
+        try:
+            response = self.__session.get(self.__api_base_url + path, 
+                                          params=params)
+            response.raise_for_status()
+            response = response.json()
+        except (requests.HTTPError, requests.ConnectionError), error:
+            raise Exception(error.message)
+
+        return response
+
     def _build_api_base_url(self,
         server_base_url, 
         rest_admin_path, 
