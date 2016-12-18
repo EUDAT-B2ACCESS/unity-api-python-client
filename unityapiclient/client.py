@@ -134,7 +134,7 @@ class UnityApiClient:
 
         return response
 
-    def get_entity_attributes(self, entity_id, group_path=None, 
+    def get_entity_attrs(self, entity_id, group_path=None, 
                               effective=True):
         """Returns all attributes of the identified entity.
 
@@ -184,16 +184,15 @@ class UnityApiClient:
 
         return response
 
-    def remove_entity_attribute(self, entity_id, attribute_name):
+    def remove_entity_attr(self, entity_id, attr_name):
         """Removes the given attribute of the identified entity.
 
         @param entity_id: numeric identifier of the entity whose attribute
             to remove
-        @param attribute_name: name of the attribute to remove
+        @param attr_name: name of the attribute to remove
 
         """
-        path = '/entity/' + str(entity_id) + '/attribute/' + str(
-            attribute_name)
+        path = '/entity/' + str(entity_id) + '/attribute/' + str(attr_name)
         try:
             response = self.__session.delete(self.__api_base_url + path)
             response.raise_for_status()
