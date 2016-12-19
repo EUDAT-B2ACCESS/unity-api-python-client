@@ -1,13 +1,21 @@
 import logging
 import requests
 
+from datetime import datetime
+from pytz import timezone
+import pytz
+
 logger = logging.getLogger(__name__)
 
 DEFAULT_REST_ADMIN_PATH = 'rest-admin'
 DEFAULT_API_VERSION = 'v1'
 DEFAULT_CERT_VERIFY = True
 
+
 class UnityApiClient:
+
+    # Thursday, 1 January 1970, 00:00:00 UTC
+    _EPOCH = datetime(1970, 1, 1, tzinfo=pytz.utc)
 
     def __init__(self, server_base_url, **kwargs):
         """Constructs a new :class:`UnityApiClient <UnityApiClient>`.
@@ -199,6 +207,41 @@ class UnityApiClient:
         except (requests.HTTPError, requests.ConnectionError), error:
             raise Exception(error.message)
 
+    def schedule_operation(self, entity_id, operation, when=None,
+                           identity_type=None):
+        """Schedules an operation to be invoked at a given time on the
+        identified entity. Allowed operations are: 'REMOVE' and
+        'DISABLE'.
+
+        Important: This method requires a privileged user.
+
+        @param entity_id: numeric identifier of the entity for which to
+            schedule the operation.
+        @param operation: operation to be scheduled. Allowed operations
+            are: 'REMOVE' and 'DISABLE'.
+        @parm when: (optional) datetime when to invoke the operation
+            (default is now). Naive datetime instances assume UTC time.
+        @param identity_type: (optional) type of identity for which to
+            schedule the operation.
+
+        """
+        if operation not in ['REMOVE', 'DISABLE']:
+            raise ValueError('Unknown operation: %r' % operation)
+        path = '/entity/' + str(entity_id) + '/admin-schedule'
+        params = {'operation': operation}
+        if when is not None:
+            if not isinstance(when, datetime):
+                raise TypeError("when argument must be an instance of datetime")
+            params['when'] = self._time_ms(when)
+        if identity_type is not None:
+            params['identityType'] = identity_type
+        try:
+            response = self.__session.put(self.__api_base_url + path,
+                                          params=params)
+            response.raise_for_status()
+        except (requests.HTTPError, requests.ConnectionError), error:
+            raise Exception(error.message)
+
     def _build_api_base_url(self,
         server_base_url, 
         rest_admin_path, 
@@ -207,3 +250,10 @@ class UnityApiClient:
         return '{0}/{1}/{2}'.format(server_base_url, 
                                     rest_admin_path, 
                                     api_version) 
+
+    def _time_ms(self, dt):
+        """Returns the number of milliseconds since the epoch for the
+        specified datetime"""
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=pytz.utc)
+        return int((dt - self._EPOCH).total_seconds() * 1000)

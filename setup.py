@@ -24,6 +24,7 @@ class PyTest(TestCommand):
 # Set run-time dependencies
 dependencies = [
     'requests',
+    'pytz',
 ]
 
 # Set test dependencies
