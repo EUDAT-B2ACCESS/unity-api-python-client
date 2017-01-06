@@ -11,6 +11,8 @@ Python 2.6 or 2.7 are fully supported.
 Third party libraries and dependencies
 --------------------------------------
 
+The following libraries will be installed when you install the client library:
+
 * `pytz <https://github.com/newvem/pytz>`_
 * `requests <https://github.com/kennethreitz/requests>`_
 
