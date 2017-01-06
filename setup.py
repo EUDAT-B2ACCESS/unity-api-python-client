@@ -92,6 +92,6 @@ setup(name='unityapiclient',
       zip_safe=False,
       install_requires=dependencies,
       tests_require=test_dependencies,
-      python_requires='>=2.6,<=2.7',
+      python_requires='>=2.6,<2.8',
       cmdclass={'test': PyTest},
 )
