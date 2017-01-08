@@ -1,3 +1,10 @@
+"""Client for the Unity IDM APIs.
+
+The client provides methods for interacting with the Administration API of a Unity IDM server.
+
+Client instantiation requires specifying the server's base URL and optionally, the deployment path of the endpoint and API version (currently there is only one).
+"""
+
 import logging
 import requests
 
