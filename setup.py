@@ -59,15 +59,7 @@ def find_version(*file_paths):
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
 
-
-# Note: The package maintainer needs pypandoc and pygments to properly convert
-# the Markdown-formatted README into RestructuredText before uploading to PyPi
-# See https://bitbucket.org/pypa/pypi/issues/148/support-markdown-for-readmes
-try:
-    import pypandoc
-    long_description=pypandoc.convert('README.md', 'rst')
-except(IOError, ImportError):
-    long_description=open('README.md').read()
+long_description = read('README.rst')
 
 setup(name='unityapiclient',
       version=find_version('unityapiclient', '__init__.py'),
