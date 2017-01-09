@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>unityapiclient.client module &#8212; unityapiclient 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="unityapiclient" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-unityapiclient.client">
+<span id="unityapiclient-client-module"></span><h1>unityapiclient.client module<a class="headerlink" href="#module-unityapiclient.client" title="Permalink to this headline">¶</a></h1>
+<p>Client for the Unity IDM APIs.</p>
+<p>The client provides methods for interacting with the Administration API of a Unity IDM server.</p>
+<p>Client instantiation requires specifying the server&#8217;s base URL and optionally, the deployment path of the endpoint and API version (currently there is only one).</p>
+<dl class="class">
+<dt id="unityapiclient.client.UnityApiClient">
+<em class="property">class </em><code class="descclassname">unityapiclient.client.</code><code class="descname">UnityApiClient</code><span class="sig-paren">(</span><em>server_base_url</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unityapiclient/client.html#UnityApiClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unityapiclient.client.UnityApiClient" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="unityapiclient.client.UnityApiClient.get_entity">
+<code class="descname">get_entity</code><span class="sig-paren">(</span><em>entity_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unityapiclient/client.html#UnityApiClient.get_entity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unityapiclient.client.UnityApiClient.get_entity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns information about the identified entity, including
+its status and all identities.</p>
+<dl class="docutils">
+<dt>&#64;param entity_id: numeric identifier of the entity whose status</dt>
+<dd>and identities to retrieve.</dd>
+</dl>
+<p>Example response:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="s2">&quot;state&quot;</span> <span class="p">:</span> <span class="s2">&quot;valid&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;identities&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="s2">&quot;typeId&quot;</span> <span class="p">:</span> <span class="s2">&quot;userName&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;value&quot;</span> <span class="p">:</span> <span class="s2">&quot;tested&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;target&quot;</span> <span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+    <span class="s2">&quot;realm&quot;</span> <span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+    <span class="s2">&quot;local&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;entityId&quot;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;comparableValue&quot;</span> <span class="p">:</span> <span class="s2">&quot;tested&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s2">&quot;typeId&quot;</span> <span class="p">:</span> <span class="s2">&quot;persistent&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;value&quot;</span> <span class="p">:</span> <span class="s2">&quot;129ffe63-63b9-4467-ae24-6bc889327b0d&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;target&quot;</span> <span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+    <span class="s2">&quot;realm&quot;</span> <span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+    <span class="s2">&quot;local&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;entityId&quot;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;comparableValue&quot;</span> <span class="p">:</span> <span class="s2">&quot;129ffe63-63b9-4467-ae24-6bc889327b0d&quot;</span>
+  <span class="p">}</span> <span class="p">],</span>
+  <span class="s2">&quot;credentialInfo&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;credentialRequirementId&quot;</span> <span class="p">:</span> <span class="s2">&quot;cr-pass&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;credentialsState&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;credential1&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;state&quot;</span> <span class="p">:</span> <span class="s2">&quot;notSet&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;extraInformation&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="unityapiclient.client.UnityApiClient.get_entity_attrs">
+<code class="descname">get_entity_attrs</code><span class="sig-paren">(</span><em>entity_id</em>, <em>group_path=None</em>, <em>effective=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unityapiclient/client.html#UnityApiClient.get_entity_attrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unityapiclient.client.UnityApiClient.get_entity_attrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all attributes of the identified entity.</p>
+<p>If <code class="docutils literal"><span class="pre">group_path</span></code> is not supplied, then the method returns the 
+attributes in all groups the entity is member of.</p>
+<dl class="docutils">
+<dt>&#64;param entity_id: numeric identifier of the entity whose attributes to </dt>
+<dd>retrieve.</dd>
+<dt>&#64;param group_path: (optional) path to the group associated with the </dt>
+<dd>attributes to retrieve.</dd>
+<dt>&#64;param effective: (optional) whether to retrieve only directly defined</dt>
+<dd>or effective attributes (by default True).</dd>
+</dl>
+<p>Example response:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span> 
+  <span class="p">{</span>
+    <span class="s2">&quot;values&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;/9j/4AAQSk .... KKKKACiiigD//2Q==&quot;</span> <span class="p">],</span>
+    <span class="s2">&quot;direct&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;jpegA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;groupPath&quot;</span> <span class="p">:</span> <span class="s2">&quot;/example&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;visibility&quot;</span> <span class="p">:</span> <span class="s2">&quot;full&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;syntax&quot;</span> <span class="p">:</span> <span class="s2">&quot;jpegImage&quot;</span>
+  <span class="p">},</span> 
+  <span class="p">{</span>
+    <span class="s2">&quot;values&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;value&quot;</span> <span class="p">],</span>
+    <span class="s2">&quot;direct&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;stringA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;groupPath&quot;</span> <span class="p">:</span> <span class="s2">&quot;/example&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;visibility&quot;</span> <span class="p">:</span> <span class="s2">&quot;full&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;syntax&quot;</span> <span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+  <span class="p">}</span> 
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="unityapiclient.client.UnityApiClient.get_entity_groups">
+<code class="descname">get_entity_groups</code><span class="sig-paren">(</span><em>entity_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unityapiclient/client.html#UnityApiClient.get_entity_groups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unityapiclient.client.UnityApiClient.get_entity_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all groups of the identified entity.</p>
+<dl class="docutils">
+<dt>&#64;param entity_id: numeric identifier of the entity whose groups to </dt>
+<dd>retrieve.</dd>
+</dl>
+<p>Example response:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;/example/sub&quot;</span><span class="p">,</span><span class="s2">&quot;/example&quot;</span><span class="p">,</span><span class="s2">&quot;/&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="unityapiclient.client.UnityApiClient.get_group">
+<code class="descname">get_group</code><span class="sig-paren">(</span><em>group_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unityapiclient/client.html#UnityApiClient.get_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unityapiclient.client.UnityApiClient.get_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all members and subgroups of the specified group.</p>
+<p>If <code class="docutils literal"><span class="pre">group_path</span></code> is not supplied, then the method returns all
+root-level groups and members.</p>
+<dl class="docutils">
+<dt>&#64;param group_path: (optional) path to group whose subgroups</dt>
+<dd>and members to retrieve.</dd>
+</dl>
+<p>Example response:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;subGroups&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">],</span>
+  <span class="s2">&quot;members&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="unityapiclient.client.UnityApiClient.remove_entity_attr">
+<code class="descname">remove_entity_attr</code><span class="sig-paren">(</span><em>entity_id</em>, <em>attr_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unityapiclient/client.html#UnityApiClient.remove_entity_attr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unityapiclient.client.UnityApiClient.remove_entity_attr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the given attribute of the identified entity.</p>
+<dl class="docutils">
+<dt>&#64;param entity_id: numeric identifier of the entity whose attribute</dt>
+<dd>to remove</dd>
+</dl>
+<p>&#64;param attr_name: name of the attribute to remove</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="unityapiclient.client.UnityApiClient.schedule_operation">
+<code class="descname">schedule_operation</code><span class="sig-paren">(</span><em>entity_id</em>, <em>operation</em>, <em>when=None</em>, <em>identity_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unityapiclient/client.html#UnityApiClient.schedule_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unityapiclient.client.UnityApiClient.schedule_operation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedules an operation to be invoked at a given time on the
+identified entity. Allowed operations are: &#8216;REMOVE&#8217; and
+&#8216;DISABLE&#8217;.</p>
+<p>Important: This method requires a privileged user.</p>
+<dl class="docutils">
+<dt>&#64;param entity_id: numeric identifier of the entity for which to</dt>
+<dd>schedule the operation.</dd>
+<dt>&#64;param operation: operation to be scheduled. Allowed operations</dt>
+<dd>are: &#8216;REMOVE&#8217; and &#8216;DISABLE&#8217;.</dd>
+<dt>&#64;parm when: (optional) datetime when to invoke the operation</dt>
+<dd>(default is now). Naive datetime instances assume UTC time.</dd>
+<dt>&#64;param identity_type: (optional) type of identity for which to</dt>
+<dd>schedule the operation.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">unityapiclient</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/client.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-2017, GRNET S.A..
+      
+      |
+      <a href="_sources/client.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/EUDAT-B2ACCESS/unity-api-python-client" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>unityapiclient.client &#8212; unityapiclient 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for unityapiclient.client</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Client for the Unity IDM APIs.</span>
+
+<span class="sd">The client provides methods for interacting with the Administration API of a Unity IDM server.</span>
+
+<span class="sd">Client instantiation requires specifying the server&#39;s base URL and optionally, the deployment path of the endpoint and API version (currently there is only one).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">pytz</span> <span class="k">import</span> <span class="n">timezone</span>
+<span class="kn">import</span> <span class="nn">pytz</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="n">DEFAULT_REST_ADMIN_PATH</span> <span class="o">=</span> <span class="s1">&#39;rest-admin&#39;</span>
+<span class="n">DEFAULT_API_VERSION</span> <span class="o">=</span> <span class="s1">&#39;v1&#39;</span>
+<span class="n">DEFAULT_CERT_VERIFY</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="UnityApiClient"><a class="viewcode-back" href="../../client.html#unityapiclient.client.UnityApiClient">[docs]</a><span class="k">class</span> <span class="nc">UnityApiClient</span><span class="p">:</span>
+
+    <span class="c1"># Thursday, 1 January 1970, 00:00:00 UTC</span>
+    <span class="n">_EPOCH</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">1970</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">pytz</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_base_url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructs a new :class:`UnityApiClient &lt;UnityApiClient&gt;`.</span>
+
+<span class="sd">        :param server_base_url: base URL of the Unity IDM server.</span>
+<span class="sd">        :param rest_admin_path: API endpoint path. Defaults to </span>
+<span class="sd">            `rest-admin`.</span>
+<span class="sd">        :param api_version: API version. Defaults to `v1`.</span>
+<span class="sd">        :param auth: (optional) Auth tuple to enable HTTP Auth.</span>
+<span class="sd">        :param cert_verify: (optional) whether the server SSL cert</span>
+<span class="sd">            will be verified. A CA_BUNDLE path can also be provided. </span>
+<span class="sd">            Defaults to ``True``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;auth&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;auth&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="o">.</span><span class="n">verify</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;cert_verify&#39;</span><span class="p">,</span> 
+            <span class="n">DEFAULT_CERT_VERIFY</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__api_base_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_api_base_url</span><span class="p">(</span>
+            <span class="n">server_base_url</span><span class="p">,</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;rest_admin_path&#39;</span><span class="p">,</span> <span class="n">DEFAULT_REST_ADMIN_PATH</span><span class="p">),</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;api_version&#39;</span><span class="p">,</span> <span class="n">DEFAULT_API_VERSION</span><span class="p">))</span>
+
+<div class="viewcode-block" id="UnityApiClient.get_group"><a class="viewcode-back" href="../../client.html#unityapiclient.client.UnityApiClient.get_group">[docs]</a>    <span class="k">def</span> <span class="nf">get_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns all members and subgroups of the specified group.</span>
+
+<span class="sd">        If ``group_path`` is not supplied, then the method returns all</span>
+<span class="sd">        root-level groups and members. </span>
+
+<span class="sd">        @param group_path: (optional) path to group whose subgroups</span>
+<span class="sd">            and members to retrieve. </span>
+
+<span class="sd">        Example response::</span>
+
+<span class="sd">             {</span>
+<span class="sd">               &quot;subGroups&quot; : [ ],</span>
+<span class="sd">               &quot;members&quot; : [ 3 ]</span>
+<span class="sd">             }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">group_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/group/&#39;</span> <span class="o">+</span> <span class="n">group_path</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/group/</span><span class="si">%2F</span><span class="s1">&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__api_base_url</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">,</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">),</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span></div>
+
+<div class="viewcode-block" id="UnityApiClient.get_entity"><a class="viewcode-back" href="../../client.html#unityapiclient.client.UnityApiClient.get_entity">[docs]</a>    <span class="k">def</span> <span class="nf">get_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns information about the identified entity, including</span>
+<span class="sd">        its status and all identities.</span>
+
+<span class="sd">        @param entity_id: numeric identifier of the entity whose status</span>
+<span class="sd">            and identities to retrieve.</span>
+
+<span class="sd">        Example response::</span>
+
+<span class="sd">             {</span>
+<span class="sd">               &quot;id&quot; : 3,</span>
+<span class="sd">               &quot;state&quot; : &quot;valid&quot;,</span>
+<span class="sd">               &quot;identities&quot; : [ {</span>
+<span class="sd">                 &quot;typeId&quot; : &quot;userName&quot;,</span>
+<span class="sd">                 &quot;value&quot; : &quot;tested&quot;,</span>
+<span class="sd">                 &quot;target&quot; : null,</span>
+<span class="sd">                 &quot;realm&quot; : null,</span>
+<span class="sd">                 &quot;local&quot; : true,</span>
+<span class="sd">                 &quot;entityId&quot; : 3,</span>
+<span class="sd">                 &quot;comparableValue&quot; : &quot;tested&quot;</span>
+<span class="sd">               }, {</span>
+<span class="sd">                 &quot;typeId&quot; : &quot;persistent&quot;,</span>
+<span class="sd">                 &quot;value&quot; : &quot;129ffe63-63b9-4467-ae24-6bc889327b0d&quot;,</span>
+<span class="sd">                 &quot;target&quot; : null,</span>
+<span class="sd">                 &quot;realm&quot; : null,</span>
+<span class="sd">                 &quot;local&quot; : true,</span>
+<span class="sd">                 &quot;entityId&quot; : 3,</span>
+<span class="sd">                 &quot;comparableValue&quot; : &quot;129ffe63-63b9-4467-ae24-6bc889327b0d&quot;</span>
+<span class="sd">               } ],</span>
+<span class="sd">               &quot;credentialInfo&quot; : {</span>
+<span class="sd">                 &quot;credentialRequirementId&quot; : &quot;cr-pass&quot;,</span>
+<span class="sd">                 &quot;credentialsState&quot; : {</span>
+<span class="sd">                   &quot;credential1&quot; : {</span>
+<span class="sd">                     &quot;state&quot; : &quot;notSet&quot;,</span>
+<span class="sd">                     &quot;extraInformation&quot; : &quot;&quot;</span>
+<span class="sd">                   }</span>
+<span class="sd">                 }</span>
+<span class="sd">               }</span>
+<span class="sd">             }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/entity/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">entity_id</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__api_base_url</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">,</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">),</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span></div>
+
+<div class="viewcode-block" id="UnityApiClient.get_entity_groups"><a class="viewcode-back" href="../../client.html#unityapiclient.client.UnityApiClient.get_entity_groups">[docs]</a>    <span class="k">def</span> <span class="nf">get_entity_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns all groups of the identified entity.</span>
+
+<span class="sd">        @param entity_id: numeric identifier of the entity whose groups to </span>
+<span class="sd">            retrieve.</span>
+
+<span class="sd">        Example response::</span>
+
+<span class="sd">             [&quot;/example/sub&quot;,&quot;/example&quot;,&quot;/&quot;]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/entity/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">entity_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/groups&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__api_base_url</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">,</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">),</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span></div>
+
+<div class="viewcode-block" id="UnityApiClient.get_entity_attrs"><a class="viewcode-back" href="../../client.html#unityapiclient.client.UnityApiClient.get_entity_attrs">[docs]</a>    <span class="k">def</span> <span class="nf">get_entity_attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">,</span> <span class="n">group_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                              <span class="n">effective</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns all attributes of the identified entity.</span>
+
+<span class="sd">        If ``group_path`` is not supplied, then the method returns the </span>
+<span class="sd">        attributes in all groups the entity is member of. </span>
+
+<span class="sd">        @param entity_id: numeric identifier of the entity whose attributes to </span>
+<span class="sd">            retrieve.</span>
+<span class="sd">        @param group_path: (optional) path to the group associated with the </span>
+<span class="sd">            attributes to retrieve.</span>
+<span class="sd">        @param effective: (optional) whether to retrieve only directly defined</span>
+<span class="sd">            or effective attributes (by default True).</span>
+
+<span class="sd">        Example response::</span>
+
+<span class="sd">            [ </span>
+<span class="sd">              {</span>
+<span class="sd">                &quot;values&quot; : [ &quot;/9j/4AAQSk .... KKKKACiiigD//2Q==&quot; ],</span>
+<span class="sd">                &quot;direct&quot; : true,</span>
+<span class="sd">                &quot;name&quot; : &quot;jpegA&quot;,</span>
+<span class="sd">                &quot;groupPath&quot; : &quot;/example&quot;,</span>
+<span class="sd">                &quot;visibility&quot; : &quot;full&quot;,</span>
+<span class="sd">                &quot;syntax&quot; : &quot;jpegImage&quot;</span>
+<span class="sd">              }, </span>
+<span class="sd">              {</span>
+<span class="sd">                &quot;values&quot; : [ &quot;value&quot; ],</span>
+<span class="sd">                &quot;direct&quot; : true,</span>
+<span class="sd">                &quot;name&quot; : &quot;stringA&quot;,</span>
+<span class="sd">                &quot;groupPath&quot; : &quot;/example&quot;,</span>
+<span class="sd">                &quot;visibility&quot; : &quot;full&quot;,</span>
+<span class="sd">                &quot;syntax&quot; : &quot;string&quot;</span>
+<span class="sd">              } </span>
+<span class="sd">            ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/entity/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">entity_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/attributes&#39;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;effective&#39;</span><span class="p">:</span> <span class="n">effective</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">group_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group_path</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__api_base_url</span> <span class="o">+</span> <span class="n">path</span><span class="p">,</span> 
+                                          <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">,</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">),</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span></div>
+
+<div class="viewcode-block" id="UnityApiClient.remove_entity_attr"><a class="viewcode-back" href="../../client.html#unityapiclient.client.UnityApiClient.remove_entity_attr">[docs]</a>    <span class="k">def</span> <span class="nf">remove_entity_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes the given attribute of the identified entity.</span>
+
+<span class="sd">        @param entity_id: numeric identifier of the entity whose attribute</span>
+<span class="sd">            to remove</span>
+<span class="sd">        @param attr_name: name of the attribute to remove</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/entity/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">entity_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/attribute/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">attr_name</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__api_base_url</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">,</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">),</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UnityApiClient.schedule_operation"><a class="viewcode-back" href="../../client.html#unityapiclient.client.UnityApiClient.schedule_operation">[docs]</a>    <span class="k">def</span> <span class="nf">schedule_operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">when</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">identity_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Schedules an operation to be invoked at a given time on the</span>
+<span class="sd">        identified entity. Allowed operations are: &#39;REMOVE&#39; and</span>
+<span class="sd">        &#39;DISABLE&#39;.</span>
+
+<span class="sd">        Important: This method requires a privileged user.</span>
+
+<span class="sd">        @param entity_id: numeric identifier of the entity for which to</span>
+<span class="sd">            schedule the operation.</span>
+<span class="sd">        @param operation: operation to be scheduled. Allowed operations</span>
+<span class="sd">            are: &#39;REMOVE&#39; and &#39;DISABLE&#39;.</span>
+<span class="sd">        @parm when: (optional) datetime when to invoke the operation</span>
+<span class="sd">            (default is now). Naive datetime instances assume UTC time.</span>
+<span class="sd">        @param identity_type: (optional) type of identity for which to</span>
+<span class="sd">            schedule the operation.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">operation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;REMOVE&#39;</span><span class="p">,</span> <span class="s1">&#39;DISABLE&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown operation: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">operation</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/entity/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">entity_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/admin-schedule&#39;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;operation&#39;</span><span class="p">:</span> <span class="n">operation</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">when</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">when</span><span class="p">,</span> <span class="n">datetime</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;when argument must be an instance of datetime&quot;</span><span class="p">)</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;when&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_ms</span><span class="p">(</span><span class="n">when</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">identity_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;identityType&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">identity_type</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__api_base_url</span> <span class="o">+</span> <span class="n">path</span><span class="p">,</span>
+                                          <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">,</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">),</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_build_api_base_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">server_base_url</span><span class="p">,</span> 
+        <span class="n">rest_admin_path</span><span class="p">,</span> 
+        <span class="n">api_version</span><span class="p">):</span>
+        
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">/</span><span class="si">{1}</span><span class="s1">/</span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">server_base_url</span><span class="p">,</span> 
+                                    <span class="n">rest_admin_path</span><span class="p">,</span> 
+                                    <span class="n">api_version</span><span class="p">)</span> 
+
+    <span class="k">def</span> <span class="nf">_time_ms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the number of milliseconds since the epoch for the</span>
+<span class="sd">        specified datetime&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dt</span><span class="o">.</span><span class="n">tzinfo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">pytz</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">((</span><span class="n">dt</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EPOCH</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-2017, GRNET S.A..
+      
+    </div>
+
+    
+    <a href="https://github.com/EUDAT-B2ACCESS/unity-api-python-client" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>
