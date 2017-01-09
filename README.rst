@@ -1,6 +1,9 @@
 unityapiclient
 ==============
 
+.. image:: https://img.shields.io/pypi/v/unityapiclient.svg
+    :target: https://pypi.python.org/pypi/unityapiclient
+
 A Python client library for the Unity IDM APIs.
 
 Currently, it only supprorts a subset of the operations exposed by Unity's Administration API. 
