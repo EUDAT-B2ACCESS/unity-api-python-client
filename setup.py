@@ -33,6 +33,13 @@ test_dependencies = [
     'pytest',
 ]
 
+# Set extra dependencies
+extra_dependencies = {
+    'security': [
+        'requests[security]',
+    ],
+}
+
 if sys.version_info < (2, 7):
     # Workaround for atexit._run_exitfuncs error when invoking `test` with
     # older versions of Python
@@ -84,6 +91,7 @@ setup(name='unityapiclient',
       zip_safe=False,
       install_requires=dependencies,
       tests_require=test_dependencies,
+      extras_require=extra_dependencies,
       python_requires='>=2.6,<2.8',
       cmdclass={'test': PyTest},
 )
