@@ -36,7 +36,9 @@ test_dependencies = [
 # Set extra dependencies
 extra_dependencies = {
     'security': [
-        'requests[security]',
+        'pyOpenSSL>=0.14',
+        'cryptography>=1.3.4',
+        'idna>=2.0.0',
     ],
 }
 
