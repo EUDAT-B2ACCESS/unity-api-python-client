@@ -68,10 +68,19 @@ def find_version(*file_paths):
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
 
+version = find_version('unityapiclient', '__init__.py')
 long_description = read('README.rst')
 
+# 'setup.py publish' shortcut.
+if sys.argv[-1] == 'publish':
+    os.system('python setup.py sdist bdist_wheel')
+    os.system('twine upload dist/*-%s-*' % version)
+    sys.exit()
+
+print('twine upload dist/*-%s-*' % version)
+
 setup(name='unityapiclient',
-      version=find_version('unityapiclient', '__init__.py'),
+      version=version,
       description=('Client library for the Unity IDM APIs'),
       long_description=long_description,
       classifiers=[
