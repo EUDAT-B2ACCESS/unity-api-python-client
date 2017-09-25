@@ -59,8 +59,21 @@ class UnityApiClient:
         Example response::
 
              {
-               "subGroups" : [ ],
-               "members" : [ 3 ]
+                 "subGroups": [
+                     "/A/B"
+                 ],
+                 "members": [
+                     {
+                         "creationTs": 1491257136044,
+                         "group": "/A",
+                         "entityId": 2
+                     },
+                     {
+                         "creationTs": 1491257136613,
+                         "group": "/A",
+                         "entityId": 4
+                     }
+                 ]
              }
 
         """
@@ -87,34 +100,48 @@ class UnityApiClient:
         Example response::
 
              {
-               "id" : 3,
-               "state" : "valid",
-               "identities" : [ {
-                 "typeId" : "userName",
-                 "value" : "tested",
-                 "target" : null,
-                 "realm" : null,
-                 "local" : true,
-                 "entityId" : 3,
-                 "comparableValue" : "tested"
-               }, {
-                 "typeId" : "persistent",
-                 "value" : "129ffe63-63b9-4467-ae24-6bc889327b0d",
-                 "target" : null,
-                 "realm" : null,
-                 "local" : true,
-                 "entityId" : 3,
-                 "comparableValue" : "129ffe63-63b9-4467-ae24-6bc889327b0d"
-               } ],
-               "credentialInfo" : {
-                 "credentialRequirementId" : "cr-pass",
-                 "credentialsState" : {
-                   "credential1" : {
-                     "state" : "notSet",
-                     "extraInformation" : ""
-                   }
-                 }
-               }
+                 "entityInformation": {
+                    "state": "valid",
+                    "entityId": 1
+                },
+                "identities": [
+                    {
+                        "value": "a",
+                        "confirmationInfo": {
+                            "confirmed": false,
+                            "confirmationDate": 0,
+                            "sentRequestAmount": 0
+                        },
+                        "comparableValue": "a",
+                        "creationTs": 1491257134658,
+                        "updateTs": 1491257134658,
+                        "typeId": "userName",
+                        "entityId": 1
+                    },
+                    {
+                        "value": "90bba4c5-adbe-4829-8215-e23960c52c33",
+                        "realm": "main",
+                        "confirmationInfo": {
+                            "confirmed": false,
+                            "confirmationDate": 0,
+                            "sentRequestAmount": 0
+                        },
+                        "comparableValue": "90bba4c5-adbe-4829-8215-e23960c52c33",
+                        "creationTs": 1491257533387,
+                        "updateTs": 1491257533387,
+                        "typeId": "persistent",
+                        "entityId": 1
+                    }
+                ],
+                "credentialInfo": {
+                    "credentialRequirementId": "Password requirement",
+                    "credentialsState": {
+                        "Password credential": {
+                            "state": "correct",
+                            "extraInformation": "{\"lastChange\":1491257134733}"
+                        }
+                    }
+                }
              }
 
         """
